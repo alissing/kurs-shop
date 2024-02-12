@@ -25,6 +25,7 @@ const Device = sequelize.define('device', {
   img: { type: DataTypes.STRING, allowNull: false },
 })
 
+
 const Type = sequelize.define('type', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   name: { type: DataTypes.STRING, unique: true, allowNull: false },
@@ -50,8 +51,26 @@ const TypeBrand = sequelize.define('type_brand', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
 })
 
+const Zakaz = sequelize.define('zakaz', {
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  summa: { type: DataTypes.INTEGER, allowNull: false },
+  date: { type: DataTypes.DATE, allowNull: false },
+})
+
+const ZakazDevice = sequelize.define('zakaz_device', {
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  amount: { type: DataTypes.INTEGER, defaultValue: 0 }
+})
+
+
+User.hasMany(Zakaz)
+Zakaz.belongsTo(User)
+
 User.hasOne(Basket)
 Basket.belongsTo(User)
+
+Zakaz.belongsToMany(Device, { through: ZakazDevice })
+Device.belongsToMany(Zakaz, { through: ZakazDevice })
 
 User.hasMany(Rating)
 Rating.belongsTo(User)
@@ -86,5 +105,7 @@ module.exports = {
   Brand,
   Rating,
   TypeBrand,
-  DeviceInfo
+  DeviceInfo,
+  Zakaz,
+  ZakazDevice
 }
